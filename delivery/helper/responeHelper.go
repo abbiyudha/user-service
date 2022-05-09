@@ -1,9 +1,9 @@
 package helper
 
-func ResponseSuccess(message string, data interface{}) map[string]interface{} {
+func ResponseSuccess(status string, data interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"message": message,
-		"data":    data,
+		"status": status,
+		"data":   data,
 	}
 }
 

@@ -38,17 +38,18 @@ func (uh *UserHandler) CreateUser() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, helper.ResponseFailed(err.Error()))
 		}
-		return c.JSON(http.StatusOK, helper.ResponseSuccessWithoutData("success create user"))
+		result := CreateUserResponse{
+			Status:   "Succes",
+			Messages: "Succes Create user",
+		}
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
-func (uh *UserHandler) LoginHandler() echo.HandlerFunc {
+func (uh *UserHandler) LoginUserHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		type loginData struct {
-			Email    string `json:"email"`
-			Password string `json:"password"`
-		}
-		var login loginData
+		var login loginUserRequest
+		var result LoginUserResponse
 
 		err := c.Bind(&login)
 		if err != nil {
@@ -59,28 +60,30 @@ func (uh *UserHandler) LoginHandler() echo.HandlerFunc {
 		if errorLogin != nil {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFailed(errorLogin.Error()))
 		}
-		responseToken := map[string]interface{}{
-			"token": token,
+
+		result = LoginUserResponse{
+			Status: "Succes",
+			Token:  token,
 		}
-		return c.JSON(http.StatusOK, helper.ResponseSuccess("success login", responseToken))
+
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
 func (uh *UserHandler) GetUserById() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := middleware.ExtractToken(c)
-
 		user, err := uh.userUseCase.GetUserById(id)
+
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, helper.ResponseFailed("user not found"))
 		}
-		var UserResponse = UserResponse{
+		var UserResponseData = UserResponse{
 			Id:    user.IdString,
 			Name:  user.Name,
 			Email: user.Email,
 		}
-
-		return c.JSON(http.StatusOK, helper.ResponseSuccess("Success get user by id", UserResponse))
+		return c.JSON(http.StatusOK, helper.ResponseSuccess("Succes", UserResponseData))
 	}
 
 }
