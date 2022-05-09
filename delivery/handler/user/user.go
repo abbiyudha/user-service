@@ -24,7 +24,7 @@ func (uh *UserHandler) CreateUser() echo.HandlerFunc {
 		var userParam entities.User
 		_, role := middleware.ExtractToken(c)
 
-		if role != "Admin" {
+		if role != "admin" {
 			return c.JSON(http.StatusUnauthorized, UnAuthorizeResponse{
 				Status:   "Failed",
 				Messages: "Unauthorized",
