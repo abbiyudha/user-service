@@ -12,5 +12,3 @@ COPY ./ /app
 RUN go build -o user-api
 
 CMD ./user-api
-
-RUN apt-get install wkhtmltopdf
